@@ -1,0 +1,157 @@
+diff -ru sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/cairobitmap.cpp sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/cairobitmap.cpp
+--- sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/cairobitmap.cpp	2019-12-02 13:58:51.000000000 +0100
++++ sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/cairobitmap.cpp	2020-03-29 03:51:26.666581774 +0200
+@@ -9,6 +9,10 @@
+ #include <memory>
+ #include <vector>
+ 
++#if LINUX
++#include "x11platform.h"
++#endif
++
+ //------------------------------------------------------------------------
+ namespace VSTGUI {
+ namespace Cairo {
+@@ -128,15 +132,6 @@
+ } // CairoBitmapPrivate
+ 
+ //-----------------------------------------------------------------------------
+-Bitmap::GetResourcePathFunc Bitmap::getResourcePath = [] () { return std::string (); };
+-
+-//-----------------------------------------------------------------------------
+-void Bitmap::setGetResourcePathFunc (GetResourcePathFunc&& func)
+-{
+-	getResourcePath = std::move (func);
+-}
+-
+-//-----------------------------------------------------------------------------
+ Bitmap::Bitmap (const CPoint* _size)
+ {
+ 	if (_size)
+@@ -221,6 +216,16 @@
+ }
+ 
+ //-----------------------------------------------------------------------------
++#if LINUX
++std::string Bitmap::getResourcePath()
++{
++	auto path = X11::Platform::getInstance ().getPath ();
++	path += "/Contents/Resources/";
++	return path;
++}
++#endif
++
++//-----------------------------------------------------------------------------
+ namespace CairoBitmapPrivate {
+ 
+ //-----------------------------------------------------------------------------
+diff -ru sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/cairobitmap.h sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/cairobitmap.h
+--- sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/cairobitmap.h	2019-12-02 13:58:51.000000000 +0100
++++ sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/cairobitmap.h	2020-03-29 03:47:39.859905766 +0200
+@@ -43,16 +43,13 @@
+ 
+ 	void unlock () { locked = false; }
+ 
+-	using GetResourcePathFunc = std::function<std::string ()>;
+-	static void setGetResourcePathFunc (GetResourcePathFunc&& func);
+-
+ private:
+ 	double scaleFactor {1.0};
+ 	SurfaceHandle surface;
+ 	CPoint size;
+ 	bool locked {false};
+ 
+-	static GetResourcePathFunc getResourcePath;
++	static std::string getResourcePath();
+ };
+ 
+ //------------------------------------------------------------------------
+diff -ru sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/cairofont.cpp sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/cairofont.cpp
+--- sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/cairofont.cpp	2019-12-02 13:58:51.000000000 +0100
++++ sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/cairofont.cpp	2020-03-29 01:37:23.096398778 +0100
+@@ -142,9 +142,10 @@
+ 	{
+ 		FcInit ();
+ 		auto config = FcInitLoadConfigAndFonts ();
+-		if (!X11::Frame::resourcePath.empty ())
++		const UTF8String& resourcePath = X11::Frame::getResourcePath();
++		if (!resourcePath.empty ())
+ 		{
+-			auto fontDir = X11::Frame::resourcePath + "Fonts/";
++			auto fontDir = resourcePath + "Fonts/";
+ 			FcConfigAppFontAddDir (config, reinterpret_cast<const FcChar8*> (fontDir.data ()));
+ 		}
+ 
+diff -ru sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/x11frame.cpp sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/x11frame.cpp
+--- sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/x11frame.cpp	2019-12-02 13:58:51.000000000 +0100
++++ sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/x11frame.cpp	2020-03-29 01:35:43.566394680 +0100
+@@ -794,7 +794,20 @@
+ };
+ 
+ //------------------------------------------------------------------------
+-UTF8String Frame::resourcePath = Platform::getInstance ().getPath () + "/Contents/Resources/";
++const UTF8String& Frame::getResourcePath()
++{
++	if (!userDefinedResourcePath.empty ())
++	{
++		return userDefinedResourcePath;
++	}
++	else
++	{
++		static UTF8String path = Platform::getInstance ().getPath () + "/Contents/Resources/";
++		return path;
++	}
++}
++
++UTF8String Frame::userDefinedResourcePath;
+ 
+ //------------------------------------------------------------------------
+ } // X11
+diff -ru sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/x11frame.h sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/x11frame.h
+--- sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/x11frame.h	2019-12-02 13:58:51.000000000 +0100
++++ sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/x11frame.h	2020-03-29 01:34:03.719723901 +0100
+@@ -34,7 +34,9 @@
+ 
+ 	static CreateIResourceInputStreamFunc createResourceInputStreamFunc;
+ 
+-	static UTF8String resourcePath;
++	static const UTF8String& getResourcePath();
++
++	static UTF8String userDefinedResourcePath;
+ 
+ private:
+ 	bool getGlobalPosition (CPoint& pos) const override;
+diff -ru sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/x11platform.cpp sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/x11platform.cpp
+--- sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/lib/platform/linux/x11platform.cpp	2019-12-02 13:58:51.000000000 +0100
++++ sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/lib/platform/linux/x11platform.cpp	2020-03-29 03:44:59.373232490 +0200
+@@ -118,18 +118,11 @@
+ Platform::Platform ()
+ {
+ 	impl = std::unique_ptr<Impl> (new Impl);
+-
+-	Cairo::Bitmap::setGetResourcePathFunc ([this]() {
+-		auto path = getPath ();
+-		path += "/Contents/Resources/";
+-		return path;
+-	});
+ }
+ 
+ //------------------------------------------------------------------------
+ Platform::~Platform ()
+ {
+-	Cairo::Bitmap::setGetResourcePathFunc ([]() { return std::string (); });
+ }
+ 
+ //------------------------------------------------------------------------
+diff -ru sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/standalone/source/platform/gdk/gdkapplication.cpp sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/standalone/source/platform/gdk/gdkapplication.cpp
+--- sfizz/vst/external/VST_SDK/VST3_SDK.old/vstgui4/vstgui/standalone/source/platform/gdk/gdkapplication.cpp	2019-12-02 13:58:50.000000000 +0100
++++ sfizz/vst/external/VST_SDK/VST3_SDK/vstgui4/vstgui/standalone/source/platform/gdk/gdkapplication.cpp	2020-03-29 01:36:35.923063503 +0100
+@@ -104,7 +104,7 @@
+ 				path += desc.u.name;
+ 				return FileResourceInputStream::create (path);
+ 			};
+-		VSTGUI::X11::Frame::resourcePath = execPath + "/Resources/";
++		VSTGUI::X11::Frame::userDefinedResourcePath = execPath + "/Resources/";
+ 
+ 		PlatformCallbacks callbacks;
+ 		callbacks.quit = [this]() { quit (); };
