@@ -8,3 +8,9 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_LTO=OFF -DSFIZZ_JACK=ON -DSFIZZ_VST=ON -DSFIZZ_TESTS=OFF -DSFIZZ_SHARED=OFF -DSFIZZ_STATIC_LIBSNDFILE=ON ..
 make
+rm -rf /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack
+cp -r sfizz.lv2 /usr/local/lib/lv2
+cp -r sfizz.vst3 /usr/local/lib/vst3
+cp clients/sfizz_jack /usr/local/bin
+# tar czf /tmp/sfizz-0.3.2.armv7.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack
+# tar czf /tmp/sfizz-0.3.2.aarch64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack
