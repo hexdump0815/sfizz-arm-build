@@ -15,5 +15,5 @@ make install
 #cp -r sfizz.lv2 /usr/local/lib/lv2
 #cp -r sfizz.vst3 /usr/local/lib/vst3
 #cp clients/sfizz_jack /usr/local/bin
-# tar czf /tmp/sfizz-dev.armv7.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render /usr/local/lib/pkgconfig/sfizz.pc /usr/local/include/sfizz.hpp /usr/local/include/sfizz.h /usr/local/lib/libsfizz.a
+# tar czf /tmp/sfizz-dev.armv7l.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render /usr/local/lib/pkgconfig/sfizz.pc /usr/local/include/sfizz.hpp /usr/local/include/sfizz.h /usr/local/lib/libsfizz.a
 # tar czf /tmp/sfizz-dev.aarch64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render /usr/local/lib/pkgconfig/sfizz.pc /usr/local/include/sfizz.hpp /usr/local/include/sfizz.h /usr/local/lib/libsfizz.a
