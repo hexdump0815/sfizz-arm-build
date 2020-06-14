@@ -17,3 +17,7 @@ make install
 #cp clients/sfizz_jack /usr/local/bin
 # tar czf /tmp/sfizz-dev.armv7l.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render /usr/local/lib/pkgconfig/sfizz.pc /usr/local/include/sfizz.hpp /usr/local/include/sfizz.h /usr/local/lib/libsfizz.a
 # tar czf /tmp/sfizz-dev.aarch64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render /usr/local/lib/pkgconfig/sfizz.pc /usr/local/include/sfizz.hpp /usr/local/include/sfizz.h /usr/local/lib/libsfizz.a
+
+side note: building on macos
+- see https://github.com/sfztools/sfizz/blob/develop/.travis/script_osx.sh for build commands
+- see https://github.com/sfztools/sfizz/blob/develop/.travis/prepare_osx.sh for making the plugins ready for use
