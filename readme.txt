@@ -19,6 +19,15 @@ make install
 # tar czf /tmp/sfizz-0.5.1.aarch64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 # tar czf /tmp/sfizz-0.5.1.x86_64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 
-side note: building on macos
-- see https://github.com/sfztools/sfizz/blob/develop/.travis/script_osx.sh for build commands
-- see https://github.com/sfztools/sfizz/blob/develop/.travis/prepare_osx.sh for making the plugins ready for use
+# side note: building on macos - the pages below seem to not be up to date
+# see https://sfz.tools/sfizz/development/build/
+# see https://sfz.tools/sfizz/development/build/macos
+brew install cmake pkgconfig libsndfile
+git clone https://github.com/sfztools/sfizz.git
+cd sfizz
+git checkout 0.5.1
+git submodule update --init --recursive
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14 -DSFIZZ_JACK=OFF -DSFIZZ_RENDER=OFF -DSFIZZ_LV2=OFF -DSFIZZ_LV2_UI=OFF -DSFIZZ_VST=ON -DSFIZZ_AU=ON -DSFIZZ_SHARED=OFF -DSFIZZ_STATIC_DEPENDENCIES=ON
+# in the end it fails due to problems with the AudioToolbox framework - maybe my too old dev setup ...
