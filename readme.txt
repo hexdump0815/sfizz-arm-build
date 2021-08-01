@@ -1,4 +1,5 @@
 apt-get install libsndfile1-dev libxcb-util-dev libxcb-cursor-dev libxcb-keysyms1-dev libxcb-xkb-dev libxkbcommon-dev libxcb-xkb-dev libxkbcommon-x11-dev libcairo2-dev cmake libjack-jackd2-dev
+# for debian bullseye apt-get install libpango1.0-dev was required too
 git clone https://github.com/sfztools/sfizz.git
 cd sfizz
 git checkout 1.0.0
@@ -17,6 +18,7 @@ make install
 #cp clients/sfizz_jack /usr/local/bin
 # tar czf /tmp/sfizz-1.0.0.armv7l.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 # tar czf /tmp/sfizz-1.0.0.aarch64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
+# tar czf /tmp/sfizz-1.0.0.i686.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 # tar czf /tmp/sfizz-1.0.0.x86_64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 
 # side note: building on macos - the pages below seem to not be up to date
