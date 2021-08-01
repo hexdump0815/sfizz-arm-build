@@ -12,6 +12,8 @@ cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_LTO=OFF -DSFIZZ_JACK=ON -DSFIZZ_VST=ON
 make
 # make install works quite well
 make install
+# i686
+# mv /usr/local/lib/vst3/sfizz.vst3/Contents/i386-linux /usr/local/lib/vst3/sfizz.vst3/Contents/i686-linux
 #rm -rf /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 #cp -r sfizz.lv2 /usr/local/lib/lv2
 #cp -r sfizz.vst3 /usr/local/lib/vst3
