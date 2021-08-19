@@ -10,14 +10,11 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_LTO=OFF -DSFIZZ_JACK=ON -DSFIZZ_VST=ON -DSFIZZ_TESTS=OFF -DSFIZZ_SHARED=OFF ..
 make
+rm -rf /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 # make install works quite well
 make install
 # i686
 # mv /usr/local/lib/vst3/sfizz.vst3/Contents/i386-linux /usr/local/lib/vst3/sfizz.vst3/Contents/i686-linux
-#rm -rf /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
-#cp -r sfizz.lv2 /usr/local/lib/lv2
-#cp -r sfizz.vst3 /usr/local/lib/vst3
-#cp clients/sfizz_jack /usr/local/bin
 # tar czf /tmp/sfizz-1.0.0.armv7l.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 # tar czf /tmp/sfizz-1.0.0.aarch64.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
 # tar czf /tmp/sfizz-1.0.0.i686.tar.gz /usr/local/lib/lv2/sfizz.lv2 /usr/local/lib/vst3/sfizz.vst3 /usr/local/bin/sfizz_jack /usr/local/bin/sfizz_render
